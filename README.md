@@ -1,37 +1,105 @@
-🎓 Koda Solution — Gestão de Horas Complementares
-Plataforma web para envio e aprovação de horas complementares acadêmicas, com três perfis de acesso: Administrador, Coordenador e Aluno.
+# 🎓 Koda Solution — Sistema de Gestão de Horas Complementares
 
-🌐 Acesse o Sistema
-O queLink🖥️ Frontend (interface do usuário)magenta-sunburst-e78903.netlify.app⚙️ Backend (API)koda-solution-production.up.railway.app
+> Plataforma web completa para gerenciamento de horas complementares acadêmicas. Alunos enviam certificados, coordenadores aprovam e administradores configuram as regras — tudo online, sem burocracia.
 
-O frontend está hospedado na Netlify e o backend com o banco de dados está hospedado na Railway. Ambos funcionam 24 horas por dia na nuvem, sem precisar de nenhum computador ligado.
+---
 
+## 🌐 Acesse Agora
 
-🔐 Credenciais de Acesso
-PerfilE-mailSenhaAdministradoradmin@koda.com123456Coordenadorjoao@koda.com123456Alunoana.souza@aluno.br123456
+| | |
+|---|---|
+| 🖥️ **Sistema (Frontend)** | [magenta-sunburst-e78903.netlify.app](https://magenta-sunburst-e78903.netlify.app) |
 
-💡 Como Funciona
+| ⚙️ **API (Backend)** | [koda-solution-production.up.railway.app](https://koda-solution-production.up.railway.app) |
 
-O aluno envia certificados de atividades complementares pelo sistema
-O coordenador analisa e aprova ou reprova cada certificado
-O administrador gerencia os cursos, coordenadores e regras de horas
+O sistema está **100% na nuvem** e funciona 24 horas por dia em qualquer dispositivo com acesso à internet. O frontend (a tela que o usuário vê) está hospedado na **Netlify** e o backend (o servidor e o banco de dados) está hospedado na **Railway**.
 
+---
 
-🛠️ Tecnologias Usadas
-CamadaTecnologiaFrontendHTML5, CSS3, JavaScriptBackendNode.js + ExpressBanco de dadosSQLiteAutenticaçãoJWTHospedagem frontendNetlifyHospedagem backendRailway
+## 🔐 Credenciais de Acesso
 
-💻 Como Rodar Localmente
+Use os dados abaixo para testar cada perfil do sistema:
+
+| Perfil | E-mail | Senha |
+|--------|--------|-------|
+| 🛠️ Administrador | admin@koda.com | 123456 |
+| 👨‍🏫 Coordenador | joao@koda.com | 123456 |
+| 👨‍🎓 Aluno | ana.souza@aluno.br | 123456 |
+
+---
+
+## 👥 O que cada perfil pode fazer
+
+**🛠️ Administrador**
+- Cadastrar e remover cursos
+- Definir limites de horas por categoria
+- Cadastrar e remover coordenadores
+
+**👨‍🏫 Coordenador**
+- Ver certificados enviados pelos alunos do seu curso
+- Aprovar ou reprovar com observação
+- Cadastrar e remover alunos
+
+**👨‍🎓 Aluno**
+- Ver painel com progresso de horas por categoria
+- Enviar certificados para análise
+- Acompanhar o status de cada envio
+
+---
+
+## 🛠️ Tecnologias
+
+| Camada | Tecnologia |
+|--------|-----------|
+| Frontend | HTML5, CSS3, JavaScript puro |
+
+| Backend | Node.js + Express |
+
+| Banco de dados | SQLite (better-sqlite3) |
+
+| Autenticação | JWT (JSON Web Token) |
+
+| Hospedagem frontend | Netlify |
+
+| Hospedagem backend + banco | Railway |
+
+---
+
+## 💻 Como Rodar Localmente
+
 Caso queira rodar o projeto no seu próprio computador:
-Backend
-bashcd backend
+
+**1. Clone o repositório**
+```bash
+git clone https://github.com/hugopires2k/-koda-solution.git
+cd koda-solution
+```
+
+**2. Configure e inicie o backend**
+```bash
+cd backend
 npm install
 node server.js
-Crie o arquivo .env na pasta backend/:
-envJWT_SECRET=koda-solution-secret-2026
-PORT=3001
-Frontend
-bashcd frontend
-live-server
-Acesse em: http://127.0.0.1:8080
+```
 
-Desenvolvido por Hugo Pires / Isack Otavio / Israel Soares / Pedro Lucas / Rafael Barbosa / Zaion Kauan · Koda Solution · 2026
+Crie o arquivo `.env` dentro da pasta `backend/`:
+```env
+JWT_SECRET=koda-solution-secret-2026
+PORT=3001
+```
+
+**3. Inicie o frontend**
+
+Abra um novo terminal e rode:
+```bash
+cd frontend
+live-server
+```
+
+Acesse em: `http://127.0.0.1:8080`
+
+> Na primeira execução o banco de dados é criado automaticamente com dados de exemplo.
+
+---
+
+Desenvolvido por **Hugo Pires** · Koda Solution · Projeto Integrador · 2026
