@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Koda Solution — Horas Complementares</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div id="toasts"></div>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">🎓</div>
+    <h1 class="login-title">Sistema de Gestão</h1>
+    <p class="login-sub">Horas Complementares Acadêmicas · Koda Solution</p>
+    <label>Perfil</label>
+    <select id="loginRole">
+      <option value="admin">Administrador</option>
+      <option value="coordenador">Coordenador</option>
+      <option value="aluno">Aluno</option>
+    </select>
+    <label>E-mail</label>
+    <input id="loginEmail" type="email" placeholder="seu@email.com" value="admin@koda.com"/>
+    <label>Senha</label>
+    <input id="loginPassword" type="password" placeholder="••••••••" value="123456"/>
+    <button class="btn-login" onclick="login()">Entrar</button>
+    <p class="login-hint">Selecione o perfil e clique em Entrar</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-name">Koda Solution</div>
+        <div class="brand-tag">Horas Complementares</div>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebarAvatar">?</div>
+        <div>
+          <div class="user-name" id="sidebarName">—</div>
+          <div class="user-role" id="sidebarRole">—</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="logout()">
+          <span>🚪</span> Sair
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main" id="mainContent"></main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Modal</div>
+    <div id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
