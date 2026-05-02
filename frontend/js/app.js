@@ -357,6 +357,7 @@ async function loadCertificados() {
         </div>
         <div class="item-actions">
           ${badgeStatus(c.status)}
+          <button class="btn btn-ghost btn-sm" onclick="verCert('${c.id}','${c.titulo}','${c.alunoNome}','${c.datEnvio}','${c.horas}','${c.categoria}','${c.status}','${c.observacao}')">👁 Ver</button>
           <button class="btn btn-success btn-sm" onclick="avaliarCert('${c.id}','aprovado')">✅ Aprovar</button>
           <button class="btn btn-danger btn-sm" onclick="promptReprovar('${c.id}')">❌ Reprovar</button>
         </div>
@@ -371,7 +372,10 @@ async function loadCertificados() {
           <div class="item-title">${c.titulo}</div>
           <div class="item-sub">👤 ${c.alunoNome} &nbsp;·&nbsp; ⏱ ${c.horas}h &nbsp;·&nbsp; ${c.categoria}${c.observacao ? ` &nbsp;·&nbsp; 💬 ${c.observacao}` : ''}</div>
         </div>
-        <div class="item-actions">${badgeStatus(c.status)}</div>
+        <div class="item-actions">
+          <button class="btn btn-ghost btn-sm" onclick="verCert('${c.id}','${c.titulo}','${c.alunoNome}','${c.datEnvio}','${c.horas}','${c.categoria}','${c.status}','${c.observacao}')">👁 Ver</button>
+          ${badgeStatus(c.status)}
+        </div>
       </div>`).join('');
   }
   list.innerHTML = html;
@@ -383,6 +387,26 @@ async function avaliarCert(id, status, observacao = '') {
     toast(status === 'aprovado' ? 'Certificado aprovado!' : 'Certificado reprovado.', status === 'aprovado' ? 'success' : 'error');
     await loadCertificados();
   } catch(e) { toast(e.message, 'error'); }
+}
+
+function verCert(id, titulo, alunoNome, datEnvio, horas, categoria, status, observacao) {
+  const statusLabel = { pendente: '⏳ Pendente', aprovado: '✅ Aprovado', reprovado: '❌ Reprovado' }[status] || status;
+  openModal('Detalhes do Certificado', `
+    <div style="display:flex; flex-direction:column; gap:14px">
+      <div><strong>Título</strong><p style="margin-top:4px; color:var(--gray-700)">${titulo}</p></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+        <div><strong>Aluno</strong><p style="margin-top:4px; color:var(--gray-700)">${alunoNome}</p></div>
+        <div><strong>Data de Envio</strong><p style="margin-top:4px; color:var(--gray-700)">${datEnvio}</p></div>
+        <div><strong>Categoria</strong><p style="margin-top:4px; color:var(--gray-700)">${categoria}</p></div>
+        <div><strong>Carga Horária</strong><p style="margin-top:4px; color:var(--gray-700)">${horas}h</p></div>
+      </div>
+      <div><strong>Status</strong><p style="margin-top:4px">${statusLabel}</p></div>
+      ${observacao ? `<div><strong>Observação</strong><p style="margin-top:4px; color:var(--red)">${observacao}</p></div>` : ''}
+      <div style="background:var(--gray-100); border-radius:var(--radius-sm); padding:12px; font-size:13px; color:var(--gray-500)">
+        📎 Upload de arquivo será disponibilizado em breve.
+      </div>
+    </div>
+  `, `<button class="btn btn-ghost" onclick="closeModal()">Fechar</button>`);
 }
 
 function promptReprovar(id) {
