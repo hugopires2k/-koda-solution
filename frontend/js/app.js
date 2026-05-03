@@ -42,6 +42,37 @@ function badgeStatus(s) {
   return `<span class="badge ${cls}">${label}</span>`;
 }
 
+// ── NAVEGAÇÃO ENTRE TELAS ────────────────────────────
+function showLogin() {
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('forgotPage').style.display = 'none';
+  document.getElementById('resetPage').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
+}
+
+function showForgotPassword() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('forgotPage').style.display = 'flex';
+  document.getElementById('resetPage').style.display = 'none';
+}
+
+function showResetPage() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('forgotPage').style.display = 'none';
+  document.getElementById('resetPage').style.display = 'flex';
+}
+
+// ── VERIFICAR TOKEN DE RESET NA URL ─────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const resetToken = params.get('reset_token');
+  if (resetToken) {
+    // Guarda token na memória e exibe tela de nova senha
+    window._resetToken = resetToken;
+    showResetPage();
+  }
+});
+
 // ── AUTH ─────────────────────────────────────────────
 async function login() {
   const role = document.getElementById('loginRole').value;
@@ -80,6 +111,55 @@ function logout() {
 
 function getDefaultPage() {
   return { admin: 'cursos', coordenador: 'certificados', aluno: 'meusdados' }[currentUser.role];
+}
+
+// ── ESQUECI MINHA SENHA ──────────────────────────────
+async function sendForgotPassword() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  if (!email) return toast('Digite seu e-mail', 'error');
+  const btn = document.querySelector('#forgotPage .btn-login');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  try {
+    await api('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) });
+    toast('Se o e-mail estiver cadastrado, você receberá o link em instantes!', 'success');
+    document.getElementById('forgotEmail').value = '';
+    setTimeout(() => showLogin(), 3000);
+  } catch(e) {
+    toast(e.message, 'error');
+  } finally {
+    btn.textContent = 'Enviar Link';
+    btn.disabled = false;
+  }
+}
+
+// ── REDEFINIR SENHA ──────────────────────────────────
+async function submitResetPassword() {
+  const newPassword = document.getElementById('resetPassword').value;
+  const confirm = document.getElementById('resetPasswordConfirm').value;
+  if (!newPassword || !confirm) return toast('Preencha os dois campos', 'error');
+  if (newPassword !== confirm) return toast('As senhas não coincidem', 'error');
+  if (newPassword.length < 6) return toast('A senha deve ter pelo menos 6 caracteres', 'error');
+
+  const resetToken = window._resetToken;
+  if (!resetToken) return toast('Token inválido. Solicite um novo link.', 'error');
+
+  const btn = document.querySelector('#resetPage .btn-login');
+  btn.textContent = 'Salvando...';
+  btn.disabled = true;
+  try {
+    await api('/auth/reset-password', { method: 'POST', body: JSON.stringify({ token: resetToken, newPassword }) });
+    toast('Senha redefinida com sucesso! Faça login.', 'success');
+    window._resetToken = null;
+    // Limpa o token da URL sem recarregar a página
+    window.history.replaceState({}, document.title, window.location.pathname);
+    setTimeout(() => showLogin(), 2000);
+  } catch(e) {
+    toast(e.message, 'error');
+  } finally {
+    btn.textContent = 'Salvar Nova Senha';
+    btn.disabled = false;
+  }
 }
 
 // ── SIDEBAR ──────────────────────────────────────────

@@ -28,7 +28,35 @@
     <label>Senha</label>
     <input id="loginPassword" type="password" placeholder="••••••••" value="123456"/>
     <button class="btn-login" onclick="login()">Entrar</button>
+    <button class="btn-forgot" onclick="showForgotPassword()">Esqueci minha senha</button>
     <p class="login-hint">Selecione o perfil e clique em Entrar</p>
+  </div>
+</div>
+
+<!-- ESQUECI MINHA SENHA -->
+<div id="forgotPage" style="display:none">
+  <div class="login-card">
+    <div class="login-logo">🔑</div>
+    <h1 class="login-title">Recuperar Senha</h1>
+    <p class="login-sub">Digite seu e-mail cadastrado para receber o link de redefinição</p>
+    <label>E-mail</label>
+    <input id="forgotEmail" type="email" placeholder="seu@email.com"/>
+    <button class="btn-login" onclick="sendForgotPassword()">Enviar Link</button>
+    <button class="btn-forgot" onclick="showLogin()">← Voltar ao login</button>
+  </div>
+</div>
+
+<!-- REDEFINIR SENHA -->
+<div id="resetPage" style="display:none">
+  <div class="login-card">
+    <div class="login-logo">🔒</div>
+    <h1 class="login-title">Nova Senha</h1>
+    <p class="login-sub">Crie uma nova senha para sua conta</p>
+    <label>Nova Senha</label>
+    <input id="resetPassword" type="password" placeholder="Mínimo 6 caracteres"/>
+    <label>Confirmar Senha</label>
+    <input id="resetPasswordConfirm" type="password" placeholder="Repita a senha"/>
+    <button class="btn-login" onclick="submitResetPassword()">Salvar Nova Senha</button>
   </div>
 </div>
 

@@ -42,6 +42,14 @@ async function initDB() {
       "datEnvio" TEXT NOT NULL,
       observacao TEXT DEFAULT ''
     );
+
+    CREATE TABLE IF NOT EXISTS reset_tokens (
+      id TEXT PRIMARY KEY,
+      "userId" TEXT NOT NULL,
+      token TEXT UNIQUE NOT NULL,
+      "expiresAt" TIMESTAMPTZ NOT NULL,
+      used BOOLEAN DEFAULT FALSE
+    );
   `);
 
   const { rows } = await pool.query('SELECT COUNT(*) as count FROM users');

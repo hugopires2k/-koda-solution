@@ -1,10 +1,24 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
+const nodemailer = require('nodemailer');
 const { pool } = require('./db');
 const { authMiddleware, requireRole, SECRET } = require('./middleware');
 
 const router = express.Router();
+
+// ── EMAIL TRANSPORTER ────────────────────────────────
+function createTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
 
 // ── AUTH ─────────────────────────────────────────────
 router.post('/auth/login', async (req, res) => {
@@ -16,6 +30,91 @@ router.post('/auth/login', async (req, res) => {
     const token = jwt.sign({ id: user.id, name: user.name, role: user.role, cursoId: user.cursoId }, SECRET, { expiresIn: '8h' });
     const { password: _, ...userSafe } = user;
     res.json({ token, user: userSafe });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── ESQUECI MINHA SENHA ──────────────────────────────
+router.post('/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'E-mail obrigatório' });
+
+    const { rows } = await pool.query('SELECT * FROM users WHERE email=$1', [email]);
+
+    // Sempre retorna sucesso para não revelar se o e-mail existe
+    if (!rows.length) return res.json({ ok: true });
+
+    const user = rows[0];
+    const token = uuidv4();
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+
+    // Invalida tokens anteriores do mesmo usuário
+    await pool.query('UPDATE reset_tokens SET used=TRUE WHERE "userId"=$1', [user.id]);
+
+    // Salva novo token
+    await pool.query(
+      'INSERT INTO reset_tokens (id, "userId", token, "expiresAt", used) VALUES ($1,$2,$3,$4,$5)',
+      [uuidv4(), user.id, token, expiresAt, false]
+    );
+
+    const frontendUrl = process.env.FRONTEND_URL || 'https://magenta-sunburst-e78903.netlify.app';
+    const resetLink = `${frontendUrl}?reset_token=${token}`;
+
+    const transporter = createTransporter();
+    await transporter.sendMail({
+      from: `"Koda Solution" <${process.env.SMTP_USER}>`,
+      to: user.email,
+      subject: '🔑 Redefinição de Senha — Koda Solution',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #f8fafc; border-radius: 12px;">
+          <div style="text-align:center; margin-bottom: 24px;">
+            <div style="background:#2563eb; width:56px; height:56px; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; font-size:26px;">🎓</div>
+            <h2 style="color:#0f172a; margin-top:16px;">Koda Solution</h2>
+          </div>
+          <p style="color:#334155;">Olá, <strong>${user.name}</strong>!</p>
+          <p style="color:#334155;">Recebemos uma solicitação para redefinir a senha da sua conta. Clique no botão abaixo para criar uma nova senha:</p>
+          <div style="text-align:center; margin: 32px 0;">
+            <a href="${resetLink}" style="background:#2563eb; color:white; padding:14px 32px; border-radius:8px; text-decoration:none; font-weight:700; font-size:15px;">
+              Redefinir Senha
+            </a>
+          </div>
+          <p style="color:#64748b; font-size:13px;">Este link é válido por <strong>1 hora</strong>. Se você não solicitou a redefinição, ignore este e-mail.</p>
+          <hr style="border:none; border-top:1px solid #e2e8f0; margin: 24px 0;"/>
+          <p style="color:#94a3b8; font-size:12px; text-align:center;">Koda Solution · Horas Complementares Acadêmicas</p>
+        </div>
+      `,
+    });
+
+    res.json({ ok: true });
+  } catch(e) {
+    console.error('Erro ao enviar e-mail:', e);
+    res.status(500).json({ error: 'Erro ao enviar e-mail. Tente novamente.' });
+  }
+});
+
+// ── REDEFINIR SENHA ──────────────────────────────────
+router.post('/auth/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    if (!token || !newPassword) return res.status(400).json({ error: 'Dados incompletos' });
+    if (newPassword.length < 6) return res.status(400).json({ error: 'A senha deve ter pelo menos 6 caracteres' });
+
+    const { rows } = await pool.query(
+      'SELECT * FROM reset_tokens WHERE token=$1 AND used=FALSE AND "expiresAt" > NOW()',
+      [token]
+    );
+
+    if (!rows.length) return res.status(400).json({ error: 'Link inválido ou expirado. Solicite um novo.' });
+
+    const resetToken = rows[0];
+
+    // Atualiza a senha
+    await pool.query('UPDATE users SET password=$1 WHERE id=$2', [newPassword, resetToken.userId]);
+
+    // Marca token como usado
+    await pool.query('UPDATE reset_tokens SET used=TRUE WHERE id=$1', [resetToken.id]);
+
+    res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
