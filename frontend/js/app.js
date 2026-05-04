@@ -1,7 +1,6 @@
 const API = 'https://koda-solution-production.up.railway.app/api';
 let token = null, currentUser = null;
 
-// ── HELPERS ─────────────────────────────────────────
 function toast(msg, type = 'info') {
   const t = document.createElement('div');
   t.className = `toast ${type}`;
@@ -42,7 +41,6 @@ function badgeStatus(s) {
   return `<span class="badge ${cls}">${label}</span>`;
 }
 
-// ── NAVEGAÇÃO ENTRE TELAS ────────────────────────────
 function showLogin() {
   document.getElementById('loginPage').style.display = 'flex';
   document.getElementById('forgotPage').style.display = 'none';
@@ -62,7 +60,6 @@ function showResetPage() {
   document.getElementById('resetPage').style.display = 'flex';
 }
 
-// ── VERIFICAR TOKEN DE RESET NA URL ─────────────────
 window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const resetToken = params.get('reset_token');
@@ -73,7 +70,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ── AUTH ─────────────────────────────────────────────
 async function login() {
   const role = document.getElementById('loginRole').value;
   const email = document.getElementById('loginEmail').value;
@@ -113,7 +109,6 @@ function getDefaultPage() {
   return { admin: 'cursos', coordenador: 'certificados', aluno: 'meusdados' }[currentUser.role];
 }
 
-// ── ESQUECI MINHA SENHA ──────────────────────────────
 async function sendForgotPassword() {
   const email = document.getElementById('forgotEmail').value.trim();
   if (!email) return toast('Digite seu e-mail', 'error');
@@ -133,7 +128,6 @@ async function sendForgotPassword() {
   }
 }
 
-// ── REDEFINIR SENHA ──────────────────────────────────
 async function submitResetPassword() {
   const newPassword = document.getElementById('resetPassword').value;
   const confirm = document.getElementById('resetPasswordConfirm').value;
@@ -162,7 +156,6 @@ async function submitResetPassword() {
   }
 }
 
-// ── SIDEBAR ──────────────────────────────────────────
 function setupSidebar() {
   document.getElementById('sidebarAvatar').textContent = currentUser.name[0].toUpperCase();
   document.getElementById('sidebarName').textContent = currentUser.name;
@@ -216,7 +209,6 @@ function navigateTo(page) {
   if (pages[page]) pages[page]();
 }
 
-// ── PAGE: CURSOS ──────────────────────────────────────
 async function pageCursos() {
   const main = document.getElementById('mainContent');
   main.innerHTML = `
@@ -280,7 +272,6 @@ async function deleteCurso(id) {
   catch(e) { toast(e.message, 'error'); }
 }
 
-// ── PAGE: REGRAS ──────────────────────────────────────
 async function pageRegras() {
   const main = document.getElementById('mainContent');
   const cursos = await api('/cursos');
@@ -342,7 +333,6 @@ async function deleteRegra(id) {
   catch(e) { toast(e.message, 'error'); }
 }
 
-// ── PAGE: COORDENADORES ───────────────────────────────
 async function pageCoordenadores() {
   const main = document.getElementById('mainContent');
   const cursos = await api('/cursos');
@@ -407,7 +397,6 @@ async function deleteCoord(id) {
   catch(e) { toast(e.message, 'error'); }
 }
 
-// ── PAGE: CERTIFICADOS (Coordenador) ──────────────────
 async function pageCertificados() {
   const main = document.getElementById('mainContent');
   main.innerHTML = `
@@ -497,7 +486,6 @@ function promptReprovar(id) {
   );
 }
 
-// ── PAGE: ALUNOS ──────────────────────────────────────
 async function pageAlunos() {
   const main = document.getElementById('mainContent');
   const cursos = await api('/cursos');
@@ -568,7 +556,6 @@ async function deleteAluno(id) {
   catch(e) { toast(e.message, 'error'); }
 }
 
-// ── PAGE: MEU PAINEL (Aluno) ──────────────────────────
 async function pageMeusDados() {
   const main = document.getElementById('mainContent');
   main.innerHTML = `<div class="page-header"><h1 class="page-title">Meu Painel</h1><p class="page-sub">Acompanhe seu progresso de horas complementares</p></div><div id="dashContent"><p style="color:var(--gray-400); padding:24px">Carregando...</p></div>`;
@@ -613,7 +600,6 @@ async function pageMeusDados() {
   } catch(e) { toast(e.message, 'error'); }
 }
 
-// ── PAGE: ENVIAR CERTIFICADO ──────────────────────────
 async function pageEnviar() {
   const main = document.getElementById('mainContent');
   const regras = await api('/regras?cursoId=' + currentUser.cursoId);
@@ -648,7 +634,6 @@ async function enviarCert() {
   } catch(e) { toast(e.message, 'error'); }
 }
 
-// ── PAGE: MEUS CERTIFICADOS ───────────────────────────
 async function pageMeusCerts() {
   const main = document.getElementById('mainContent');
   main.innerHTML = `
