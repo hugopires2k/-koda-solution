@@ -34,12 +34,10 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font); background: var(--gray-50); color: var(--gray-900); min-height: 100vh; }
 
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--gray-100); }
 ::-webkit-scrollbar-thumb { background: var(--blue-300); border-radius: 3px; }
 
-/* ── TOASTS ── */
 #toasts { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
 .toast {
   padding: 14px 20px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500;
@@ -51,7 +49,6 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .toast.info { background: var(--blue-600); }
 @keyframes slideIn { from { transform: translateX(120px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-/* ── LOGIN ── */
 #loginPage, #forgotPage, #resetPage {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
   background: linear-gradient(135deg, var(--blue-950) 0%, var(--blue-800) 50%, var(--blue-600) 100%);
@@ -86,7 +83,6 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .btn-login:active { transform: scale(0.99); }
 .btn-login:disabled { background: var(--gray-400); cursor: not-allowed; }
 
-/* ── BOTÃO ESQUECI MINHA SENHA ── */
 .btn-forgot {
   width: 100%; padding: 11px; background: none; border: none;
   color: var(--blue-600); font-family: var(--font); font-size: 13px; font-weight: 600;
@@ -97,11 +93,9 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 
 .login-hint { text-align: center; font-size: 12px; color: var(--gray-400); margin-top: 16px; }
 
-/* ── APP SHELL ── */
 #app { display: none; min-height: 100vh; }
 .shell { display: flex; min-height: 100vh; }
 
-/* ── SIDEBAR ── */
 .sidebar {
   width: 260px; background: var(--blue-950); display: flex; flex-direction: column;
   position: fixed; top: 0; left: 0; height: 100vh; z-index: 100;
@@ -139,20 +133,17 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 }
 .btn-logout:hover { background: rgba(239,68,68,0.12); color: var(--red); }
 
-/* ── MAIN ── */
 .main { margin-left: 260px; padding: 40px; flex: 1; min-height: 100vh; }
 .page-header { margin-bottom: 32px; }
 .page-title { font-size: 26px; font-weight: 800; color: var(--gray-900); }
 .page-sub { font-size: 14px; color: var(--gray-500); margin-top: 4px; }
 
-/* ── CARDS ── */
 .card {
   background: white; border-radius: var(--radius); padding: 28px;
   box-shadow: var(--shadow); margin-bottom: 24px;
 }
 .card-title { font-size: 15px; font-weight: 700; color: var(--gray-900); margin-bottom: 20px; }
 
-/* ── FORM ── */
 .form-group { margin-bottom: 18px; }
 .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
 .form-control {
@@ -163,7 +154,6 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .form-control:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(59,130,246,.10); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-/* ── BUTTONS ── */
 .btn {
   display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px;
   border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px; font-weight: 600;
@@ -179,7 +169,6 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .btn-ghost:hover { background: var(--gray-200); }
 .btn-sm { padding: 7px 12px; font-size: 12px; }
 
-/* ── LIST ITEMS ── */
 .list-item {
   display: flex; align-items: center; gap: 16px; padding: 18px 20px;
   border: 1.5px solid var(--gray-100); border-radius: var(--radius-sm); margin-bottom: 10px;
@@ -199,7 +188,6 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .item-sub { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
 .item-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-/* ── BADGES ── */
 .badge {
   display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
   border-radius: 20px; font-size: 11px; font-weight: 600;
@@ -208,7 +196,6 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .badge-approved { background: var(--green-light); color: #065f46; }
 .badge-rejected { background: var(--red-light); color: #991b1b; }
 
-/* ── STAT CARDS ── */
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
 .stat-card {
   background: white; border-radius: var(--radius); padding: 24px;
@@ -218,7 +205,6 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .stat-value { font-size: 32px; font-weight: 800; color: var(--gray-900); margin-top: 4px; }
 .stat-desc { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
 
-/* ── PROGRESS BAR ── */
 .progress-wrap { margin-bottom: 16px; }
 .progress-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
 .progress-label span:first-child { font-weight: 600; color: var(--gray-700); }
@@ -227,7 +213,6 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .progress-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--blue-500), var(--blue-400)); transition: width .6s ease; }
 .progress-fill.over { background: linear-gradient(90deg, var(--yellow), #fbbf24); }
 
-/* ── MODAL ── */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500;
   display: flex; align-items: center; justify-content: center; padding: 20px;
@@ -242,16 +227,13 @@ body { font-family: var(--font); background: var(--gray-50); color: var(--gray-9
 .modal-title { font-size: 18px; font-weight: 700; color: var(--gray-900); margin-bottom: 20px; }
 .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
 
-/* ── EMPTY STATE ── */
 .empty { text-align: center; padding: 48px 24px; color: var(--gray-400); }
 .empty-icon { font-size: 40px; margin-bottom: 12px; }
 .empty p { font-size: 14px; }
 
-/* ── SECTION TITLE ── */
 .section-title { font-size: 16px; font-weight: 700; color: var(--gray-900); margin-bottom: 16px; margin-top: 8px; }
 .divider { height: 1px; background: var(--gray-100); margin: 20px 0; }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .sidebar { width: 100%; height: auto; position: relative; }
   .main { margin-left: 0; padding: 20px; }
